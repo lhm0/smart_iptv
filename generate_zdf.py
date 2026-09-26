@@ -7,7 +7,11 @@ SOURCE="https://zdf-hls-15.akamaized.net/hls/live/2016498/de/veryhigh/master.m3u
 OUT=Path("public/zdf-tvton.m3u8")
 
 def fetch(u):
-    req=urllib.request.Request(u,headers={"User-Agent":"Mozilla/5.0 smart_iptv generator"})
+    req=urllib.request.Request(u,headers={
+        "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+        "Referer":"https://www.zdf.de/",
+        "Accept":"application/vnd.apple.mpegurl,application/x-mpegURL,*/*",
+    })
     with urllib.request.urlopen(req,timeout=30) as r:
         return r.read().decode("utf-8-sig")
 
