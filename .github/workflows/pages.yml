@@ -27,7 +27,12 @@ jobs:
         with:
           python-version: "3.x"
       - name: Generate ZDF playlist
+        id: generate
+        continue-on-error: true
         run: python generate_zdf.py
+      - name: Warn when using the committed playlist
+        if: steps.generate.outcome == 'failure'
+        run: echo "::warning::ZDF could not be reached. Publishing the last committed playlist; dynamic refresh requires a runner with ZDF access."
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

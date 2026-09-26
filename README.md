@@ -17,6 +17,11 @@ Video-Rendition.
 
 Der Workflow läuft zusätzlich ungefähr stündlich und bei jedem Push.
 
+Hinweis: GitHub-hosted Runner erhalten derzeit beim ZDF-CDN HTTP 403. In
+diesem Fall veröffentlicht der Workflow die zuletzt eingecheckte Playlist und
+zeigt eine Warnung; für automatische Aktualisierungen muss der Runner ZDF
+erreichen können, zum Beispiel als Self-hosted Runner im eigenen Netzwerk.
+
 ## Smart-IPTV-Senderliste
 
 Den bisherigen ZDF-Eintrag ersetzen durch:
