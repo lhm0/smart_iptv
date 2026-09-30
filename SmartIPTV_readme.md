@@ -36,6 +36,11 @@ Master mit dieser einen Audiospur und ohne Untertitel- oder Closed-Caption-
 Verweise. URLs für Video und Ton werden absolut ausgegeben, sodass wechselnde
 relative Unterpfade der Sender-Master übernommen werden.
 
+Für NDR prüft der Generator zusätzlich, dass die ausgewählte Video- und
+Audio-Media-Playlist tatsächlich ein abrufbares HLS-Manifest ist. Bei einem
+Fehler wird die vorherige Playlist nicht überschrieben; der Lauf meldet den
+Fehler deutlich.
+
 Ausgewählte Spuren:
 
 | Sender | Ausgewählte Tonspur | Generierte Datei |

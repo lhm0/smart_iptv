@@ -33,6 +33,8 @@ def fetch(url):
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
         "Referer": referer,
         "Accept": "application/vnd.apple.mpegurl,application/x-mpegURL,*/*",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
     })
     with urllib.request.urlopen(request, timeout=30) as response:
         return response.read().decode("utf-8-sig")
@@ -137,6 +139,12 @@ def build_playlist(source_url, wanted_audio, preferred_resolution=None, preferre
     video.pop("SUBTITLES", None)
     video.pop("CLOSED-CAPTIONS", None)
 
+    if source_url.endswith("/ndr_hh/master.m3u8"):
+        for media_url, kind in ((video_url, "Video"), (audio["URI"], "Audio")):
+            media_playlist = fetch(media_url)
+            if not media_playlist.lstrip().startswith("#EXTM3U"):
+                raise RuntimeError(f"NDR-{kind}-Media-Playlist ist ungültig: {media_url}")
+
     version = next((line.split(":", 1)[1] for line in lines if line.startswith("#EXT-X-VERSION:")), "6")
     output = ["#EXTM3U", f"#EXT-X-VERSION:{version}"]
     if "#EXT-X-INDEPENDENT-SEGMENTS" in lines:
@@ -147,7 +155,7 @@ def build_playlist(source_url, wanted_audio, preferred_resolution=None, preferre
         video_url,
         "",
     ))
-    return "\n".join(output), audio, video
+    return "\n".join(output), audio, video, video_url
 
 
 def main():
@@ -156,7 +164,7 @@ def main():
     for name, filename, source_url, wanted_audio in CHANNELS:
         try:
             preferred_resolution, preferred_frame_rate = PINNED_VARIANTS.get(filename, (None, None))
-            playlist, audio, video = build_playlist(
+            playlist, audio, video, video_url = build_playlist(
                 source_url,
                 wanted_audio,
                 preferred_resolution,
@@ -164,6 +172,8 @@ def main():
             )
             (OUTPUT_DIR / filename).write_text(playlist, encoding="utf-8", newline="\n")
             print(f"{name}: Audio {audio['NAME']} | Video {video.get('RESOLUTION', 'unbekannt')}")
+            if filename == "ndr-hamburg.m3u8":
+                print(f"NDR Media-URLs: Video {video_url} | Audio {audio['URI']}")
         except Exception as error:
             failures.append((name, error))
             print(f"{name}: FEHLER: {error}")

@@ -1,8 +1,8 @@
 # smart_iptv
 
 Der Raspberry Pi erzeugt stündlich aktuelle HLS-Master-Playlists mit jeweils
-nur dem normalen deutschen Ton und ohne Untertitel. GitHub Pages ist für den
-Betrieb nicht erforderlich.
+nur dem normalen deutschen Ton und ohne Untertitel. GitHub Actions veröffentlicht
+zusätzlich die NDR-Testplaylist unter einer stabilen öffentlichen URL.
 
 Die ausführliche Anleitung zur Einrichtung von Smart IPTV auf dem LG, zum
 Raspberry Pi, Generator, nginx, Timer und zur Fehlerbehebung steht in
@@ -36,6 +36,10 @@ Audiodeskription und Untertitel werden nicht angeboten. Die veröffentlichte
 Adresse lautet <https://lhm0.github.io/smart_iptv/ndr-hamburg.m3u8>. Der Pi
 erzeugt dieselbe Datei lokal unter
 `http://192.168.0.131:8080/ndr-hamburg.m3u8`.
+
+Der Generator prüft bei NDR auch, dass Video- und Audio-Media-Playlist
+erreichbare HLS-Manifeste sind. Bei Fehlern wird die vorherige gültige Datei
+nicht überschrieben; GitHub Pages behält dann den zuletzt eingecheckten Stand.
 
 ## Generator auf dem Pi aktualisieren
 
