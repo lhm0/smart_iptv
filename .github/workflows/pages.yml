@@ -1,4 +1,4 @@
-name: Build and publish ZDF TV Ton stream
+name: Build and publish filtered TV streams
 
 on:
   push:
@@ -26,13 +26,13 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - name: Generate ZDF playlist
+      - name: Generate filtered playlists
         id: generate
         continue-on-error: true
         run: python generate_zdf.py
-      - name: Warn when using the committed playlist
+      - name: Warn when using committed playlists for failed sources
         if: steps.generate.outcome == 'failure'
-        run: echo "::warning::ZDF could not be reached. Publishing the last committed playlist; dynamic refresh requires a runner with ZDF access."
+        run: echo "::warning::One or more sources could not be refreshed. Failed channels keep their last committed playlist; inspect the generator output."
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
