@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import re
+import time
 import urllib.request
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
@@ -29,7 +30,8 @@ QUOTED_ATTRIBUTES = {"URI", "GROUP-ID", "NAME", "LANGUAGE", "CHARACTERISTICS", "
 def fetch(url):
     host = urlparse(url).hostname or ""
     referer = "https://www.zdf.de/" if host.startswith("zdf-hls-") else "https://www.ardmediathek.de/"
-    request = urllib.request.Request(url, headers={
+    request_url = f"{url}?refresh={time.time_ns()}" if url.endswith("/ndr_hh/master.m3u8") else url
+    request = urllib.request.Request(request_url, headers={
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
         "Referer": referer,
         "Accept": "application/vnd.apple.mpegurl,application/x-mpegURL,*/*",
