@@ -29,6 +29,8 @@ jobs:
       - name: Generate filtered playlists
         id: generate
         continue-on-error: true
+        env:
+          SMART_IPTV_SKIP_CHANNELS: NDR Fernsehen Hamburg
         run: python generate_zdf.py
       - name: Warn when using committed playlists for failed sources
         if: steps.generate.outcome == 'failure'

@@ -40,6 +40,18 @@ erzeugt dieselbe Datei lokal unter
 Der Generator prüft bei NDR auch, dass Video- und Audio-Media-Playlist
 erreichbare HLS-Manifeste sind. Bei Fehlern wird die vorherige gültige Datei
 nicht überschrieben; GitHub Pages behält dann den zuletzt eingecheckten Stand.
+Der GitHub-Runner erhält eine abweichende NDR-CDN-URL, die im Heimnetz 404
+lieferte. Deshalb überspringt der Pages-Workflow NDR. Die stündliche Pi-Datei
+wird automatisch dynamisch aktualisiert; zum Aktualisieren der öffentlichen
+Pages-Kopie nach einem Pfadwechsel die geprüfte Datei vom Pi kopieren und
+committen:
+
+```sh
+scp ludwin@192.168.0.131:/srv/smart-iptv/public/ndr-hamburg.m3u8 public/ndr-hamburg.m3u8
+git add public/ndr-hamburg.m3u8
+git commit -m "Refresh NDR Hamburg playlist"
+git push
+```
 
 ## Generator auf dem Pi aktualisieren
 

@@ -162,8 +162,16 @@ def build_playlist(source_url, wanted_audio, preferred_resolution=None, preferre
 
 def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    skipped_channels = {
+        name.strip().casefold()
+        for name in os.environ.get("SMART_IPTV_SKIP_CHANNELS", "").split(",")
+        if name.strip()
+    }
     failures = []
     for name, filename, source_url, wanted_audio in CHANNELS:
+        if name.casefold() in skipped_channels:
+            print(f"{name}: in dieser Umgebung übersprungen")
+            continue
         try:
             preferred_resolution, preferred_frame_rate = PINNED_VARIANTS.get(filename, (None, None))
             playlist, audio, video, video_url = build_playlist(

@@ -39,7 +39,17 @@ relative Unterpfade der Sender-Master übernommen werden.
 Für NDR prüft der Generator zusätzlich, dass die ausgewählte Video- und
 Audio-Media-Playlist tatsächlich ein abrufbares HLS-Manifest ist. Bei einem
 Fehler wird die vorherige Playlist nicht überschrieben; der Lauf meldet den
-Fehler deutlich.
+Fehler deutlich. GitHub-hosted Runner erhalten eine andere NDR-CDN-URL, die im
+Heimnetz nicht erreichbar war; deshalb überspringt der Pages-Workflow die
+NDR-Generierung. Der Pi aktualisiert die lokale Datei stündlich. Nach einem
+NDR-Pfadwechsel kann die dort geprüfte Datei nach GitHub kopiert werden:
+
+```sh
+scp ludwin@192.168.0.131:/srv/smart-iptv/public/ndr-hamburg.m3u8 public/ndr-hamburg.m3u8
+git add public/ndr-hamburg.m3u8
+git commit -m "Refresh NDR Hamburg playlist"
+git push
+```
 
 Ausgewählte Spuren:
 
